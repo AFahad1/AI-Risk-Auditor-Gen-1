@@ -7,7 +7,7 @@ body {
   background: #0a0800;
   color: #e2e8f0;
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* ── SETUP SCREEN ── */
@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
   padding: 24px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Background grid */
@@ -139,7 +139,59 @@ body {
 }
 
 .hero-body-2 {
+  margin-bottom: 28px;
+}
+
+/* Instructions */
+.hero-instructions {
   margin-bottom: 32px;
+}
+
+.instructions-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f97316;
+  margin-bottom: 12px;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: inst;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.instructions-list li {
+  counter-increment: inst;
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.instructions-list li::before {
+  content: counter(inst);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  background: rgba(249, 115, 22, 0.12);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f97316;
+  margin-top: 2px;
+}
+
+.instructions-list li strong {
+  color: #cbd5e1;
 }
 
 /* Feature list */

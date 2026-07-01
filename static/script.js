@@ -116,8 +116,8 @@ async function startAssessment() {
   const orgName  = document.getElementById("org-name").value.trim();
   const assignee = document.getElementById("assignee").value.trim();
 
-  state.orgName        = orgName;
-  state.assignee       = assignee;
+  state.orgName  = orgName;
+  state.assignee = assignee;
   state.results        = [];
   state.gapResults     = [];
   state.currentSection = null;
@@ -201,6 +201,12 @@ async function submitAnswer() {
   const input  = document.getElementById("answer-input");
   const answer = input.value.trim();
   if (!answer || state.isProcessing) return;
+
+  if (answer === "Skip to End") {
+    input.value = "";
+    skipToEnd();
+    return;
+  }
 
   disableInput();
   input.value = "";
@@ -356,6 +362,47 @@ async function callGapAuditor() {
 }
 
 // ── COMPLETION ─────────────────────────────────────────
+
+function skipToEnd() {
+  if (state.phase === "employee_count") {
+    state.employeeCount = "unknown";
+    state.phase = "assessment";
+  }
+
+  const startIndex = state.mode === "gap" ? state.gapResults.length : state.results.length;
+  for (let i = startIndex; i < state.questions.length; i++) {
+    const control = state.questions[i];
+    if (state.mode === "gap") {
+      state.gapResults.push({
+        name:        control.id || `Control ${i + 1}`,
+        status:      "Need Review",
+        nature:      "Observation",
+        description: "—",
+        action_items:"—"
+      });
+    } else {
+      state.results.push({
+        name:                      control.id || `Control ${i + 1}`,
+        category:                  "—",
+        status:                    "OPEN",
+        residual_risk_likelihood:  control.likelihood || 3,
+        residual_risk_impact:      control.impact     || 3,
+        application_name:          "—",
+        treatment:                 "Skipped"
+      });
+    }
+  }
+
+  state.isProcessing = false;
+  disableInput();
+  updateProgress();
+
+  if (state.mode === "gap") {
+    completeGapAssessment();
+  } else {
+    completeAssessment();
+  }
+}
 
 function completeAssessment() {
   const total   = state.results.length;
