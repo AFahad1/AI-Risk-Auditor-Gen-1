@@ -6,7 +6,7 @@
   <title>Risk Assessment</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
   <script>window.USER_EMAIL = {{ user_email | tojson }};</script>
 </head>
@@ -14,134 +14,123 @@
 
   <!-- ── SETUP SCREEN ── -->
   <div id="setup-screen">
-    <div class="setup-page">
 
-      <!-- Left hero panel -->
-      <div class="hero-panel">
-        <div class="hero-badge">
-          <span class="badge-dot"></span>
-          AI-Powered Audit
-        </div>
+    <header class="site-header">
+      <a href="/" class="brand">RiskAssess</a>
+      <nav class="site-nav"></nav>
+      <div id="auth-header-btn"></div>
+    </header>
 
-        <h1 id="hero-title" class="hero-title">
-          Evaluate<br>your<br><span class="hero-accent">Risk Posture.</span>
+    <main class="hero">
+      <div class="hero__content">
+        <p class="eyebrow">AI-Guided Risk Assessment</p>
+
+        <h1 id="hero-title">
+          Know your
+          <span>risk posture</span>
+          before your
+          <span>auditor does.</span>
         </h1>
 
-        <p id="hero-body-1" class="hero-body">
-          A structured, AI-guided compliance interview that assesses your organisation's
-          risk posture control by control — surfacing gaps, scoring residual risk, and
-          producing a full risk register ready for export.
+        <p id="hero-body-1" class="hero__summary">
+          Turn a structured compliance interview into a clear risk register, practical
+          treatment plan, and audit-ready report.
         </p>
 
-        <p id="hero-body-2" class="hero-body hero-body-2">
-          Each risk assessment is tailored to your chosen framework and organisation size,
-          with practical treatment recommendations you can act on immediately.
-        </p>
-
-        <div class="hero-instructions">
-          <p class="instructions-label">How to complete your assessment</p>
-          <ol class="instructions-list">
-            <li><strong>Select your framework and begin.</strong> Choose your compliance framework (SOC 2 or ISO 27001), enter your organisation name, and click "Begin Assessment" to start the AI-guided interview.</li>
-            <li><strong>Answer each question as thoroughly as you can.</strong> Reference the technologies you use (e.g. Microsoft 365, AWS, Intune) to support each control. If a control doesn't apply to your environment, simply respond "Out of Scope." If a question is unclear, ask the auditor for clarification before responding.</li>
-            <li><strong>Export your results when complete.</strong> Once all risks have been assessed (approximately 35–45 minutes), save your assessment to the risk register and receive an official report.</li>
-          </ol>
-        </div>
-
-        <div class="hero-features">
-          <div class="feature-item">
-            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <div class="trust-signals">
+          <div class="trust-signal">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
-            <div>
-              <span class="feature-title">Control-by-control evaluation</span>
-              <span class="feature-desc">Every control is assessed individually through conversational follow-up</span>
-            </div>
+            <span>35–45 min</span>
           </div>
-          <div class="feature-item">
-            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          <div class="trust-signal">
+            <svg viewBox="0 0 24 24">
+              <rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
             </svg>
-            <div>
-              <span class="feature-title">Residual risk scoring</span>
-              <span class="feature-desc">Likelihood and impact rated 1–5 per control after treatment</span>
-            </div>
+            <span>Confidential responses</span>
           </div>
-          <div class="feature-item">
-            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          <div class="trust-signal">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2.5 2.5M15 15l2.5 2.5M6.5 17.5L9 15M15 9l2.5-2.5"/>
             </svg>
-            <div>
-              <span class="feature-title">Exportable risk register</span>
-              <span class="feature-desc">Download a CSV report of all assessed controls when complete</span>
-            </div>
+            <span>AI-guided interview</span>
           </div>
         </div>
       </div>
 
-      <!-- Right form panel -->
-      <div class="form-panel">
-        <div class="form-panel-header">
-          <div class="form-logo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
+      <div class="shield-art">
+        <div class="shield-art__orbit"></div>
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+
+      <div class="assessment-card">
+        <div class="assessment-card__intro">
+          <h2>Start your assessment</h2>
+          <p>Choose a framework and tell us who this is for.</p>
+        </div>
+
+        <form class="assessment-form" onsubmit="return false">
+          <div class="mode-toggle" id="mode-toggle">
+            <button type="button" class="mode-btn active" data-mode="risk">Risk Assessment</button>
+            <button type="button" class="mode-btn" data-mode="gap">Gap Assessment</button>
           </div>
-          <span class="form-panel-title">Pick your assessment</span>
-          <div id="auth-header-btn" style="margin-left:auto"></div>
-        </div>
 
-        <!-- Mode toggle -->
-        <div class="mode-toggle" id="mode-toggle">
-          <button class="mode-btn active" data-mode="risk">Risk Assessment</button>
-          <button class="mode-btn" data-mode="gap">Gap Assessment</button>
-        </div>
-
-        <div class="form-group">
-          <label class="field-label">Framework</label>
-          <div class="framework-grid">
-            <div class="framework-card" data-framework="SOC 2">
-              <span class="fw-name">SOC 2 <span class="coming-soon-badge" style="display:none">Coming Soon</span></span>
-              <span class="fw-desc">Trust Service Criteria</span>
+          <fieldset class="framework-fieldset">
+            <legend>Framework</legend>
+            <div class="framework-options">
+              <label class="framework-option" data-framework="SOC 2">
+                <input type="radio" name="framework" value="SOC 2" checked />
+                <span class="framework-option__check">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span class="framework-option__name">SOC 2 <span class="coming-soon-badge" style="display:none">Coming Soon</span></span>
+                <span class="framework-option__description">Trust Services Criteria</span>
+              </label>
+              <label class="framework-option" data-framework="ISO 27001">
+                <input type="radio" name="framework" value="ISO 27001" />
+                <span class="framework-option__check">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span class="framework-option__name">ISO 27001</span>
+                <span class="framework-option__description">Information security</span>
+              </label>
             </div>
-            <div class="framework-card" data-framework="ISO 27001">
-              <span class="fw-name">ISO 27001</span>
-              <span class="fw-desc">Info Security Mgmt</span>
-            </div>
-          </div>
-        </div>
+          </fieldset>
 
-        <div class="field-divider"></div>
-
-        <div class="form-group">
-          <label class="field-label" for="org-name">
-            Organisation Name <span class="required">*</span>
+          <label class="form-field">
+            <span>Organisation Name <span class="required">*</span></span>
+            <input type="text" id="org-name" placeholder="e.g. Acme Corp" />
           </label>
-          <input type="text" id="org-name" placeholder="e.g. Acme Corp" />
-        </div>
 
-        <div class="form-group">
-          <div class="label-row">
-            <label class="field-label" for="assignee">Assignee Email</label>
-            <span class="optional-tag">optional</span>
-          </div>
-          <input type="email" id="assignee" placeholder="responsible@company.com" />
-        </div>
+          <label class="form-field">
+            <span class="form-field__label">Assignee Email <span class="form-field__optional">Optional</span></span>
+            <input type="email" id="assignee" placeholder="responsible@company.com" />
+          </label>
 
-        <div id="setup-error" class="error-msg" style="display:none"></div>
+          <div id="setup-error" class="error-msg" style="display:none"></div>
 
-        <button id="start-btn" class="btn-primary">
-          <span class="btn-inner">
-            Begin Assessment
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <button id="start-btn" type="button" class="primary-action">
+            Begin assessment
+            <svg viewBox="0 0 24 24">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
-          </span>
-        </button>
+          </button>
 
-        <div class="form-footer">Powered by Claude · Responses are confidential</div>
+          <div class="form-reassurance">
+            <span>
+              <svg viewBox="0 0 24 24">
+                <rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+              </svg>
+              Your responses remain confidential.
+            </span>
+            <span>About 35–45 minutes</span>
+          </div>
+        </form>
       </div>
-
-    </div>
+    </main>
   </div>
 
   <!-- ── CHAT SCREEN ── -->

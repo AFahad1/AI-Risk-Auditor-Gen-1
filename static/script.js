@@ -18,18 +18,9 @@ const state = {
 
 // ── SETUP ──────────────────────────────────────────────
 
-const defaultCard = document.querySelector(".framework-card[data-framework='SOC 2']");
-if (defaultCard) {
-  defaultCard.classList.add("selected");
-  state.framework = "SOC 2";
-}
-
-document.querySelectorAll(".framework-card").forEach(card => {
-  card.addEventListener("click", () => {
-    if (card.classList.contains("card-disabled")) return;
-    document.querySelectorAll(".framework-card").forEach(c => c.classList.remove("selected"));
-    card.classList.add("selected");
-    state.framework = card.dataset.framework;
+document.querySelectorAll(".framework-option input[type=radio]").forEach(radio => {
+  radio.addEventListener("change", () => {
+    state.framework = radio.value;
   });
 });
 
@@ -45,33 +36,28 @@ function setMode(mode) {
     btn.classList.toggle("active", btn.dataset.mode === mode)
   );
 
-  const soc2Card   = document.querySelector(".framework-card[data-framework='SOC 2']");
-  const soc2Badge  = soc2Card.querySelector(".coming-soon-badge");
+  const soc2Radio  = document.querySelector(".framework-option input[value='SOC 2']");
+  const soc2Badge  = document.querySelector(".framework-option[data-framework='SOC 2'] .coming-soon-badge");
 
   if (mode === "gap") {
-    soc2Card.classList.add("card-disabled");
+    soc2Radio.disabled = true;
     soc2Badge.style.display = "inline";
     // auto-select ISO 27001 if SOC 2 was selected
     if (state.framework === "SOC 2") {
-      document.querySelectorAll(".framework-card").forEach(c => c.classList.remove("selected"));
-      document.querySelector(".framework-card[data-framework='ISO 27001']").classList.add("selected");
+      document.querySelector(".framework-option input[value='ISO 27001']").checked = true;
       state.framework = "ISO 27001";
     }
     document.getElementById("hero-title").innerHTML =
-      'Evaluate<br>your<br><span class="hero-accent">Compliance Posture.</span>';
+      'Know your <span>compliance gaps</span> before your <span>auditor does.</span>';
     document.getElementById("hero-body-1").textContent =
-      "A structured, AI-guided gap assessment that evaluates your organisation's compliance against a framework — identifying what's in place, what's missing, and where action is needed.";
-    document.getElementById("hero-body-2").textContent =
-      "Each gap assessment is tailored to your chosen framework, producing a full gap register ready for export and remediation.";
+      "Turn a structured compliance interview into a clear gap register, practical remediation plan, and audit-ready report.";
   } else {
-    soc2Card.classList.remove("card-disabled");
+    soc2Radio.disabled = false;
     soc2Badge.style.display = "none";
     document.getElementById("hero-title").innerHTML =
-      'Evaluate<br>your<br><span class="hero-accent">Risk Posture.</span>';
+      'Know your <span>risk posture</span> before your <span>auditor does.</span>';
     document.getElementById("hero-body-1").textContent =
-      "A structured, AI-guided compliance interview that assesses your organisation's risk posture control by control — surfacing gaps, scoring residual risk, and producing a full risk register ready for export.";
-    document.getElementById("hero-body-2").textContent =
-      "Each risk assessment is tailored to your chosen framework and organisation size, with practical treatment recommendations you can act on immediately.";
+      "Turn a structured compliance interview into a clear risk register, practical treatment plan, and audit-ready report.";
   }
 }
 
@@ -86,7 +72,7 @@ function renderAuthHeaderBtn() {
       <span class="auth-user-email">${escapeHtml(window.USER_EMAIL)}</span>
       <a href="/logout" class="auth-signout-link">Sign out</a>`;
   } else {
-    el.innerHTML = `<button class="auth-signin-btn" onclick="openAuthModal('login')">Sign In</button>`;
+    el.innerHTML = `<button class="sign-in" onclick="openAuthModal('login')">Sign In</button>`;
   }
 }
 renderAuthHeaderBtn();
@@ -134,7 +120,7 @@ async function startAssessment() {
     state.questions = await res.json();
   } catch {
     showSetupError("Failed to load questions. Is the server running?");
-    btn.textContent = "Begin Assessment";
+    btn.textContent = "Begin assessment";
     btn.disabled    = false;
     return;
   }

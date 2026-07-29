@@ -8,18 +8,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    #setup-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; }
+    .auth-page-header { display:flex; align-items:center; gap:10px; margin-bottom:28px; }
+    .auth-page-logo { width:34px; height:34px; background:linear-gradient(135deg,#f97316,#fbbf24); border-radius:8px; display:flex; align-items:center; justify-content:center; color:#000; flex-shrink:0; }
+    .auth-page-title { font-size:17px; font-weight:700; color:#f1f5f9; }
+    .auth-page-footer { text-align:center; font-size:11px; color:#292524; margin-top:18px; }
+  </style>
 </head>
 <body>
   <div id="setup-screen">
     <div class="form-panel" style="max-width:420px;width:100%;border-radius:20px;border:1px solid rgba(251,146,60,0.18);margin:24px;justify-content:flex-start;">
 
-      <div class="form-panel-header">
-        <div class="form-logo">
+      <div class="auth-page-header">
+        <div class="auth-page-logo">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </div>
-        <span class="form-panel-title">Create Account</span>
+        <span class="auth-page-title">Create Account</span>
       </div>
 
       {% if error %}
@@ -49,7 +56,7 @@
         </button>
       </form>
 
-      <div class="form-footer">
+      <div class="auth-page-footer">
         Already have an account?
         <a href="/login" style="color:#f97316;text-decoration:none;font-weight:600;">Sign In</a>
       </div>

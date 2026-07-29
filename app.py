@@ -16,6 +16,7 @@ QUESTION_LIMIT = None
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-change-me")
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.register_blueprint(auth_bp)
 
 
