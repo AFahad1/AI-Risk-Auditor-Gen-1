@@ -1,162 +1,141 @@
-# Risk Assessment Tool
+# RiskAssess
 
-An AI-powered compliance risk assessment chatbot built with Claude and Flask. It conducts structured, conversational audits of security controls across compliance frameworks and produces a downloadable risk register — the kind of document that normally takes days to produce manually.
+**Know your risk posture before your auditor does.** An AI-guided compliance interview that turns a SOC 2 or ISO 27001 assessment into a scored risk register, treatment plan and audit-ready report — in under an hour instead of days.
 
-Built as part of [Truzta](https://truzta.com), a compliance assistant platform.
+**Live demo:** [riskassess-i6fa.onrender.com](https://riskassess-i6fa.onrender.com/)
+
+> Hosted on Render's free tier, so the first load can take up to a minute while the app wakes up.
+
+![RiskAssess landing page](docs/screenshot.png)
 
 ---
 
-## What It Does
+## The problem
 
-Most compliance audits are painful — long spreadsheets, vague questions, and hours of back-and-forth. This tool replaces that process with a natural conversation.
+Compliance assessments are usually run through long spreadsheets and back-and-forth emails between an auditor and the client team. Questions are generic, answers are inconsistent, and turning them into a scored risk register is manual work that takes days.
 
-You select a compliance framework, answer Claude's questions about your security controls, and walk away with a structured risk register you can hand to an auditor.
+## The solution
 
-**Supported frameworks:**
-- SOC 2 (Trust Service Criteria)
-- ISO 27001 (Information Security Management)
+AI Risk Auditor interviews the client like a real auditor would. It works through each control one at a time, asks up to three targeted follow-up questions based on the answers, and then produces a scored risk record for that control. At the end, the results are saved and exported as a risk register ready for review.
+
+Built by a Product Manager at a B2B cybersecurity company, from first-hand experience of how slow this process is for customers.
 
 ---
 
 ## Features
 
-- **Conversational auditing** — Claude interviews you like a real auditor, asking intelligent follow-up questions based on your answers
-- **Calibrated to your organisation** — tool recommendations adjust based on your headcount (startup vs. enterprise)
-- **Structured risk output** — every control produces a risk record with likelihood score, impact score, residual risk, recommended tool, and treatment action
-- **CSV export** — download your full risk register with one click, ready to share with auditors or import into a GRC platform
-- **Progress tracking** — real-time progress bar so you always know where you are in the assessment
-- **Framework-specific guidance** — tool recommendations are tailored per framework (e.g. Okta for access control under SOC 2, ISO-aligned controls for 27001)
+- **Two assessment modes**
+  - **Risk assessment** — 30 controls each for SOC 2 (Trust Services Criteria) and ISO 27001
+  - **Gap assessment** — 89 ISO 27001 clause and Annex A questions to find where an organisation falls short of certification
+- **Adaptive follow-ups** — Claude asks up to 3 follow-up questions per control before scoring it
+- **Calibrated recommendations** — tooling suggestions adjust to the organisation's headcount and the chosen framework
+- **Structured risk scoring** — every control produces likelihood, impact, residual risk, treatment action, and CIA impact
+- **User accounts** — email/password sign-up and login via Supabase Auth
+- **Saved assessments** — completed results are stored per user in Postgres (Supabase)
+- **Automatic delivery** — exported risk registers are emailed to the assessor via Resend
+- **Formal Excel report** — `report_generator.py` turns a results CSV into a five-sheet workbook (summary dashboard, risk register, 5×5 heat map, risk by category, open actions)
 
 ---
 
-## How It Works
+## How it works
 
-1. Select your compliance framework and enter your organisation name
-2. Tell Claude your headcount — this calibrates the recommendations
-3. Claude assesses each control one at a time, asking up to 3 follow-up questions before producing a finding
-4. Each completed control generates a risk record automatically
-5. When all controls are done, download your risk register as a CSV
+```
+Sign up / log in
+      │
+      ▼
+Choose mode (risk or gap) + framework + organisation details
+      │
+      ▼
+For each control:  Claude asks question → user answers → up to 3 follow-ups → scored risk record
+      │
+      ▼
+Export → saved to Supabase → CSV emailed to assessor → optional Excel report
+```
 
 ---
 
-## Tech Stack
+## Tech stack
 
 | Layer | Technology |
-|-------|-----------|
-| Backend | Python, Flask |
-| AI | Claude Haiku via Anthropic SDK |
+|---|---|
+| Backend | Python, Flask, Gunicorn |
+| AI | Claude Haiku 4.5 via the Anthropic SDK |
+| Auth & database | Supabase (Auth + Postgres) |
+| Email | Resend |
+| Reporting | openpyxl (Excel), Python `csv` |
 | Frontend | Vanilla JavaScript, HTML, CSS |
-| Export | CSV (Python's csv module) |
-| Config | python-dotenv |
-
-No database — all session state lives in the browser, making the backend completely stateless.
+| Deployment | Docker, with configs for Render and Railway |
 
 ---
 
-## Getting Started
+## Running locally
 
-**Requirements:** Python 3.x, an Anthropic API key
+**Requirements:** Python 3.11+, an Anthropic API key, a Supabase project, and a Resend API key.
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR-USERNAME/risk-assessment-tool.git
-cd risk-assessment-tool
-
-# 2. Install dependencies
+git clone https://github.com/AFahad1/AI-Risk-Auditor.git
+cd AI-Risk-Auditor
 pip install -r requirements.txt
 
-# 3. Set up your API key
 cp .env.example .env
-# Open .env and add your key:
-# ANTHROPIC_API_KEY=your_key_here
+# Fill in ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_KEY, SECRET_KEY,
+# RESEND_API_KEY and OWNER_EMAIL
 
-# 4. Run the app
 python app.py
-
-# 5. Open http://localhost:5000 in your browser
+# Open http://localhost:5000
 ```
 
----
+Generate an Excel report from an exported CSV:
 
-## Project Structure
-
-```
-risk-assessment-tool/
-├── app.py              # Flask backend, Claude API calls, CSV export logic
-├── questions.py        # Control questions for each framework
-├── requirements.txt    # Python dependencies
-├── .env.example        # Environment variable template
-├── static/
-│   ├── script.js       # Frontend logic and state management
-│   └── style.css       # Chat interface styling
-└── templates/
-    └── index.html      # Main UI template
+```bash
+python report_generator.py path/to/results.csv --org "Acme Inc" --framework "ISO 27001"
 ```
 
----
+## Deploying
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Serve the main UI |
-| GET | `/api/questions/<framework>` | Return control questions for a framework |
-| POST | `/api/chat` | Send a message and get Claude's assessment response |
-| POST | `/api/export` | Generate and download the risk register CSV |
+The repo includes a `Dockerfile`, `render.yaml` and `railway.toml`. Set the environment variables from `.env.example` in your host's dashboard. The app exposes `/health` for health checks.
 
 ---
 
-## Adding a New Framework
+## Project structure
 
-1. Add a new entry to the `QUESTIONS` dict in `questions.py`
-2. Add a framework card in `templates/index.html`
-3. Optionally add tool guidance to `FRAMEWORK_TOOLS` in `app.py`
+```
+├── app.py                 # Flask routes, Claude prompts, export logic
+├── auth.py                # Supabase sign-up / login / logout
+├── questions.py           # Control and gap-assessment question banks
+├── report_generator.py    # Standalone CSV → Excel report builder
+├── static/                # Frontend JS and CSS
+├── templates/             # index, login, register pages
+├── Dockerfile, render.yaml, railway.toml, Procfile
+└── .env.example
+```
 
-No other changes needed.
+## API
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/health` | Health check |
+| GET | `/api/questions/<framework>` | Risk-assessment controls |
+| GET | `/api/gap-questions/<framework>` | Gap-assessment questions |
+| POST | `/api/chat` · `/api/gap-chat` | Send an answer, get Claude's next question or finding |
+| POST | `/api/export` · `/api/gap-export` | Save results and send the register |
 
 ---
+
+## Product decisions
+
+- **One control at a time.** Long questionnaires get abandoned; a focused conversation keeps answers specific.
+- **Capped follow-ups (3).** Enough depth to score a control properly, without the assessment dragging on.
+- **Haiku over a larger model.** An assessment is 30–89 turns long, so speed and cost per turn matter more than peak reasoning.
+- **Human review stays in the loop.** Findings are a first draft for a qualified assessor, not a final audit opinion.
 
 ## Limitations
 
-**Usability**
-- Runs locally — there is no hosted version, so users must set up Python and an API key themselves
-- No user accounts or login — anyone with the link (if deployed) can access it
-- Session data is lost on page refresh — if you close the browser mid-assessment, you start over
-- No way to pause and resume an assessment across sessions
-- Assessment flow is linear — you cannot skip a control and come back to it
-
-**Product**
-- No persistent storage — completed risk registers only exist as downloaded CSV files, not in a database
-- Single user at a time per session — not built for team collaboration or multi-reviewer workflows
-- No audit trail — there is no record of who ran the assessment, when, or what answers were given
-- Control questions are hardcoded — updating the question bank requires editing `questions.py` directly
-- Completely dependent on the Anthropic API — no offline fallback if the API is unavailable
-- Claude's assessments are probabilistic — findings should always be reviewed by a qualified professional before being used in a real audit
-
----
-
-## Next Steps — Making This a Real Product
-
-**Step 1 — Add a database**
-Replace browser-state with a proper database (PostgreSQL via SQLAlchemy). This enables saved sessions, audit history, and the ability to pause and resume assessments. Every risk register gets stored, not just downloaded once.
-
-**Step 2 — User authentication**
-Add login with email/password or Google OAuth (using Flask-Login or Supabase Auth). This unlocks multi-user support and personal assessment history.
-
-**Step 3 — Deploy it**
-Host on [Railway](https://railway.app) or [Render](https://render.com) — both support Flask apps with a free tier. Once deployed, you have a real shareable URL. Add a custom domain and it's a product.
-
-**Step 4 — Team collaboration**
-Allow multiple reviewers to work on the same assessment — one person answers, another reviews and approves findings. Add commenting and status tracking per control.
-
-**Step 5 — Richer exports**
-Beyond CSV, export to PDF (for auditors), Excel (for GRC teams), or push directly into platforms like Vanta, Drata, or Notion via their APIs.
-
-**Step 6 — Expand framework coverage**
-Add HIPAA, PCI-DSS, NIST CSF, and CIS Controls. The architecture already supports new frameworks with minimal code changes.
+- AI-generated findings must be reviewed by a qualified professional before use in a real audit.
+- Depends on the Anthropic API; there is no offline mode.
 
 ---
 
 ## Author
 
-Built by Fahad — a beginner developer learning AI engineering by building real things.
+**Fahad Ahmed** — Product Manager in cybersecurity SaaS, building AI products end to end. [LinkedIn](https://www.linkedin.com/in/YOUR-HANDLE)
