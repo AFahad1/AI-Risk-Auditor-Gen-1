@@ -6,7 +6,7 @@
 
 > Hosted on Render's free tier, so the first load can take up to a minute while the app wakes up.
 
-![RiskAssess landing page](docs/screenshot.png)
+**Trying the demo:** create an account, start a risk assessment and answer a couple of questions to see the AI auditor's follow-ups. Then click **Skip to end** to fill the remaining controls with sample findings and go straight to the risk dashboard.
 
 ---
 
@@ -16,7 +16,7 @@ Compliance assessments are usually run through long spreadsheets and back-and-fo
 
 ## The solution
 
-AI Risk Auditor interviews the client like a real auditor would. It works through each control one at a time, asks up to three targeted follow-up questions based on the answers, and then produces a scored risk record for that control. At the end, the results are saved and exported as a risk register ready for review.
+RiskAssess interviews the client like a real auditor would. It works through each control one at a time, asks targeted follow-up questions based on the answers, and then produces a scored risk record for that control. At the end, the results are saved and exported as a risk register ready for review.
 
 Built by a Product Manager at a B2B cybersecurity company, from first-hand experience of how slow this process is for customers.
 
@@ -27,10 +27,12 @@ Built by a Product Manager at a B2B cybersecurity company, from first-hand exper
 - **Two assessment modes**
   - **Risk assessment** — 30 controls each for SOC 2 (Trust Services Criteria) and ISO 27001
   - **Gap assessment** — 89 ISO 27001 clause and Annex A questions to find where an organisation falls short of certification
-- **Adaptive follow-ups** — Claude asks up to 3 follow-up questions per control before scoring it
+- **Adaptive follow-ups** — Claude asks up to 3 follow-up questions per control (2 in gap mode) before scoring it
 - **Calibrated recommendations** — tooling suggestions adjust to the organisation's headcount and the chosen framework
 - **Structured risk scoring** — every control produces likelihood, impact, residual risk, treatment action, and CIA impact
-- **User accounts** — email/password sign-up and login via Supabase Auth
+- **Risk dashboard** — summary stats, status breakdown and a full risk register once the assessment is complete
+- **Skip to end** — one click fills the remaining controls with clearly labelled sample findings, so reviewers can see the finished report in seconds
+- **User accounts** — email/password sign-up and login via Supabase Auth, with email-based password reset
 - **Saved assessments** — completed results are stored per user in Postgres (Supabase)
 - **Automatic delivery** — exported risk registers are emailed to the assessor via Resend
 - **Formal Excel report** — `report_generator.py` turns a results CSV into a five-sheet workbook (summary dashboard, risk register, 5×5 heat map, risk by category, open actions)
@@ -47,6 +49,7 @@ Choose mode (risk or gap) + framework + organisation details
       │
       ▼
 For each control:  Claude asks question → user answers → up to 3 follow-ups → scored risk record
+                   (or Skip to end → remaining controls filled with sample findings)
       │
       ▼
 Export → saved to Supabase → CSV emailed to assessor → optional Excel report
@@ -73,8 +76,8 @@ Export → saved to Supabase → CSV emailed to assessor → optional Excel repo
 **Requirements:** Python 3.11+, an Anthropic API key, a Supabase project, and a Resend API key.
 
 ```bash
-git clone https://github.com/AFahad1/AI-Risk-Auditor.git
-cd AI-Risk-Auditor
+git clone https://github.com/AFahad1/AI-Risk-Auditor-Gen-1.git
+cd AI-Risk-Auditor-Gen-1
 pip install -r requirements.txt
 
 cp .env.example .env
@@ -95,17 +98,20 @@ python report_generator.py path/to/results.csv --org "Acme Inc" --framework "ISO
 
 The repo includes a `Dockerfile`, `render.yaml` and `railway.toml`. Set the environment variables from `.env.example` in your host's dashboard. The app exposes `/health` for health checks.
 
+For password reset emails to link back to the app, add `https://<your-domain>/reset-password` (and `http://localhost:5000/reset-password` for local development) under **Authentication → URL Configuration → Redirect URLs** in Supabase.
+
 ---
 
 ## Project structure
 
 ```
 ├── app.py                 # Flask routes, Claude prompts, export logic
-├── auth.py                # Supabase sign-up / login / logout
+├── auth.py                # Supabase sign-up / login / logout / password reset
 ├── questions.py           # Control and gap-assessment question banks
 ├── report_generator.py    # Standalone CSV → Excel report builder
+├── REPORT_GENERATOR_INTEGRATION.md  # Report generator docs
 ├── static/                # Frontend JS and CSS
-├── templates/             # index, login, register pages
+├── templates/             # index, login, register, reset_password pages
 ├── Dockerfile, render.yaml, railway.toml, Procfile
 └── .env.example
 ```
@@ -119,6 +125,9 @@ The repo includes a `Dockerfile`, `render.yaml` and `railway.toml`. Set the envi
 | GET | `/api/gap-questions/<framework>` | Gap-assessment questions |
 | POST | `/api/chat` · `/api/gap-chat` | Send an answer, get Claude's next question or finding |
 | POST | `/api/export` · `/api/gap-export` | Save results and send the register |
+| POST | `/api/auth/register` · `/api/auth/login` | Create an account / sign in |
+| POST | `/api/auth/forgot-password` | Email a password reset link |
+| GET · POST | `/reset-password` · `/api/auth/reset-password` | Reset page and set the new password |
 
 ---
 
@@ -128,6 +137,7 @@ The repo includes a `Dockerfile`, `render.yaml` and `railway.toml`. Set the envi
 - **Capped follow-ups (3).** Enough depth to score a control properly, without the assessment dragging on.
 - **Haiku over a larger model.** An assessment is 30–89 turns long, so speed and cost per turn matter more than peak reasoning.
 - **Human review stays in the loop.** Findings are a first draft for a qualified assessor, not a final audit opinion.
+- **A shortcut to the payoff.** The dashboard is the most valuable screen, so Skip to end lets a first-time visitor reach it without answering all 30 controls. Sample rows are labelled so they're never mistaken for real findings.
 
 ## Limitations
 
@@ -138,4 +148,4 @@ The repo includes a `Dockerfile`, `render.yaml` and `railway.toml`. Set the envi
 
 ## Author
 
-**Fahad Ahmed** — Product Manager in cybersecurity SaaS, building AI products end to end. [LinkedIn](https://www.linkedin.com/in/YOUR-HANDLE)
+**Fahad Ahmed** — Product Manager in cybersecurity SaaS, building AI products end to end. [LinkedIn](https://www.linkedin.com/in/afahad1)

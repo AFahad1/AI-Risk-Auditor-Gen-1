@@ -7,7 +7,7 @@ description: Launch the risk-assessment-tool Flask app locally
 ## Launch
 
 ```bash
-cd "c:/Users/fahad/risk-assessment-tool"
+cd "c:/Users/fahad/AI-Risk-Auditor-Gen-1"
 python app.py &
 ```
 

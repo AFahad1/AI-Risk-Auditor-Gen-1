@@ -152,6 +152,7 @@
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
+        <button id="skip-btn" class="btn-download" onclick="skipToEnd()" title="Fill the remaining controls with sample findings and jump to the report">Skip to end ⏭</button>
         <a href="/logout" class="btn-download" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.08);color:#64748b;">Sign out</a>
       </div>
     </div>
@@ -250,6 +251,9 @@
           <label class="field-label" for="login-password">Password</label>
           <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
         </div>
+        <div class="auth-forgot-row">
+          <button type="button" class="auth-link" onclick="switchAuthTab('forgot')">Forgot password?</button>
+        </div>
         <div id="login-error" class="error-msg" style="display:none"></div>
         <button class="btn-primary btn-auth" onclick="submitLogin()">
           <span class="btn-inner">Sign In <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
@@ -274,6 +278,24 @@
         <button class="btn-primary btn-auth" onclick="submitRegister()">
           <span class="btn-inner">Create Account <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </button>
+      </div>
+
+      <!-- Forgot password panel -->
+      <div id="panel-forgot" class="auth-tab-panel" style="display:none">
+        <p class="auth-forgot-intro">Enter the email you registered with and we'll send you a link to set a new password.</p>
+        <div class="form-group">
+          <label class="field-label" for="forgot-email">Email</label>
+          <input type="email" id="forgot-email" placeholder="you@company.com" autocomplete="email" />
+        </div>
+        <div id="forgot-error" class="error-msg" style="display:none"></div>
+        <div id="forgot-success" class="success-msg" style="display:none"></div>
+        <button id="forgot-btn" class="btn-primary btn-auth" onclick="submitForgotPassword()">
+          <span class="btn-inner" id="forgot-btn-label">Send Reset Link <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </button>
+        <p id="forgot-cooldown" class="auth-cooldown-note" style="display:none"></p>
+        <div class="auth-back-row">
+          <button type="button" class="auth-link" onclick="switchAuthTab('login')">← Back to Sign In</button>
+        </div>
       </div>
 
     </div>
